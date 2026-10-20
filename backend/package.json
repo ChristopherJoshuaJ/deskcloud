@@ -1,0 +1,21 @@
+{
+  "name": "deskcloud-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend de DeskCloud: almacenamiento de archivos en fragmentos sobre SQLite",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:migrar": "node scripts/migrar.js",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "express-session": "^1.19.0"
+  }
+}
