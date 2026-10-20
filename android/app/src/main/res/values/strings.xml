@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DeskCloud</string>
+    <string name="login_title">DeskCloud</string>
+    <string name="login_subtitle">Almacenamiento en la nube con una interfaz familiar</string>
+    <string name="hint_correo">Correo</string>
+    <string name="hint_contrasena">Contraseña</string>
+    <string name="btn_entrar">Entrar</string>
+    <string name="login_ayuda">Usa cualquier correo válido y una contraseña de al menos 6 caracteres (demo local).</string>
+    <string name="error_correo">Escribe un correo válido</string>
+    <string name="error_contrasena">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="nav_mi_espacio">Mi espacio</string>
+    <string name="nav_favoritos">Favoritos</string>
+    <string name="nav_cuenta">Cuenta</string>
+    <string name="buscar_archivos">Buscar archivos…</string>
+    <string name="cargando">Cargando archivos…</string>
+    <string name="error_red">No se pudo cargar la lista. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="reintentar">Reintentar</string>
+    <string name="lista_vacia">No hay archivos que coincidan con la búsqueda</string>
+    <string name="favoritos_vacios">Aún no tienes favoritos. Márcalos desde Mi espacio.</string>
+    <string name="cuenta_titulo">Mi cuenta</string>
+    <string name="tema_oscuro">Tema oscuro</string>
+    <string name="tema_oscuro_desc">Se guarda con SharedPreferences y se aplica al reiniciar</string>
+    <string name="ultimo_busqueda">Última búsqueda</string>
+    <string name="sin_busqueda">—</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="detalle_titulo">Detalle</string>
+    <string name="album">Álbum %1$d</string>
+    <string name="marcar_favorito">Favorito</string>
+    <string name="api_fuente">Datos de JSONPlaceholder (API pública)</string>
+</resources>

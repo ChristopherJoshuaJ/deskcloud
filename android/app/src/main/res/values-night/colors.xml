@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dc_fondo">#FF0D1117</color>
+    <color name="dc_panel">#FF131924</color>
+    <color name="dc_marca">#FF6A4EA0</color>
+    <color name="dc_carpeta">#FF4668A1</color>
+    <color name="dc_texto">#FFDCE6F5</color>
+    <color name="dc_suave">#FF9CBEF0</color>
+    <color name="dc_borde">#FF1A2D47</color>
+    <color name="dc_error">#FFE05757</color>
+    <color name="dc_on_marca">#FFFFFFFF</color>
+</resources>

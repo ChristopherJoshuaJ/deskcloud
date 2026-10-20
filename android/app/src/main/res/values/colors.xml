@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dc_fondo">#FFF5F7FB</color>
+    <color name="dc_panel">#FFFFFFFF</color>
+    <color name="dc_marca">#FF6A4EA0</color>
+    <color name="dc_carpeta">#FF4668A1</color>
+    <color name="dc_texto">#FF1A2332</color>
+    <color name="dc_suave">#FF5A6B85</color>
+    <color name="dc_borde">#FFD0D7E4</color>
+    <color name="dc_error">#FFE05757</color>
+    <color name="dc_on_marca">#FFFFFFFF</color>
+    <color name="ic_launcher_background">#FF6A4EA0</color>
+</resources>

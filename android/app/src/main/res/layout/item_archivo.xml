@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="@color/dc_panel"
+    app:cardCornerRadius="12dp"
+    app:strokeColor="@color/dc_borde"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/ivMiniatura"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@color/dc_borde"
+            android:contentDescription="@string/detalle_titulo"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_folder" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/dc_texto"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="archivo.png" />
+
+            <TextView
+                android:id="@+id/tvAlbum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/dc_suave"
+                android:textSize="12sp"
+                tools:text="Álbum 1" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnFavorito"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/marcar_favorito"
+            android:src="@android:drawable/btn_star_big_off"
+            app:tint="@color/dc_marca" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
