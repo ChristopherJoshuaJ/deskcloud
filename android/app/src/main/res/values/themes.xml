@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.DeskCloud.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dc_marca</item>
+        <item name="colorPrimaryContainer">@color/dc_carpeta</item>
+        <item name="colorOnPrimary">@color/dc_on_marca</item>
+        <item name="colorSecondary">@color/dc_carpeta</item>
+        <item name="android:statusBarColor">@color/dc_fondo</item>
+        <item name="android:navigationBarColor">@color/dc_panel</item>
+        <item name="android:windowBackground">@color/dc_fondo</item>
+        <item name="android:textColorPrimary">@color/dc_texto</item>
+        <item name="android:textColorSecondary">@color/dc_suave</item>
+        <item name="colorError">@color/dc_error</item>
+    </style>
+</resources>
