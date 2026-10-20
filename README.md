@@ -4,10 +4,18 @@ Almacenamiento en la nube con una interfaz tipo explorador de archivos. Proyecto
 
 Solo requiere [Node.js](https://nodejs.org/) 24 o superior.
 
+| Carpeta | Contenido |
+|---|---|
+| `backend/` | API REST con Express 5 y SQLite (`node:sqlite`), con pruebas en `backend/test` |
+| `frontend/` | Interfaz web en Angular 21 y PrimeNG 21 |
+| `android/` | App nativa en Kotlin para el curso de móviles (ver [`android/README.md`](android/README.md)) |
+| `docs/` | Informes del proyecto |
+
 ## Puesta en marcha
 
 ```bash
-cd frontend
+git clone https://github.com/ChristopherJoshuaJ/deskcloud.git
+cd deskcloud/frontend
 npm install
 npm run build       # genera frontend/dist/deskcloud/browser
 cd ../backend
@@ -225,3 +233,11 @@ En los espacios compartidos, lo que hacen los demás (crear, subir, editar, reno
 | `DURACION_SESION_MS` | 7 días sin actividad |
 | `RUTA_FRONTEND` | `frontend/dist/deskcloud/browser` |
 | `ORIGENES_PERMITIDOS` | `http://localhost:4200` (servidor de desarrollo de Angular); varios separados por comas |
+
+## Flujo de trabajo con Git
+
+- `main` siempre contiene una versión que funciona; no se trabaja directamente sobre ella.
+- Cada cambio se hace en una rama propia (`feature/...`, `docs/...`, `fix/...`) que se sube a GitHub y se integra con un pull request.
+- Los mensajes de commit siguen [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/): `feat`, `fix`, `test`, `docs`, `chore`, con el módulo entre paréntesis, por ejemplo `feat(android): ...`.
+- Las entregas se marcan con etiquetas anotadas (`git tag -a apf2`).
+- `.gitignore` deja fuera `node_modules/`, la base de datos y los archivos subidos (`backend/data/`), las compilaciones, `.env` y los `.zip`.
