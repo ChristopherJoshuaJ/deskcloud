@@ -1,0 +1,12 @@
+node_modules/
+backend/data/
+
+frontend/dist/
+frontend/.angular/
+
+.env
+*.log
+*.zip
+.DS_Store
+.idea/
+.vscode/
