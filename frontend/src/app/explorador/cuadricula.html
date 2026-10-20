@@ -1,0 +1,54 @@
+@let cortados = estado.portapapeles.cortados();
+<div class="encabezado dc-etiqueta">
+  <span>Ordenado por {{ nombresOrden[estado.orden().campo] }} <i class="pi" [class.pi-angle-up]="estado.orden().asc" [class.pi-angle-down]="!estado.orden().asc"></i></span>
+  <span class="vistas">
+    <button type="button" class="vista" pTooltip="Lista" tooltipPosition="left" aria-label="Lista" (click)="estado.cambiarVista('lista')"><i class="pi pi-list"></i></button>
+    <button type="button" class="vista activa" pTooltip="Cuadrícula" tooltipPosition="left" aria-label="Cuadrícula" (click)="estado.cambiarVista('cuadricula')"><i class="pi pi-th-large"></i></button>
+  </span>
+</div>
+
+@for (grupo of grupos(); track grupo.tipo) {
+  @if (grupo.elementos.length > 0) {
+    <button type="button" class="grupo dc-etiqueta" (click)="estado.alternarGrupo(grupo.tipo)">
+      <i class="pi" [class.pi-chevron-down]="!estado.gruposPlegados().has(grupo.tipo)" [class.pi-chevron-right]="estado.gruposPlegados().has(grupo.tipo)"></i>
+      {{ grupo.titulo }} ({{ grupo.elementos.length }})
+    </button>
+    @if (!estado.gruposPlegados().has(grupo.tipo)) {
+      <div class="mosaicos" role="listbox" aria-multiselectable="true">
+        @for (e of grupo.elementos; track e.id) {
+          <div
+            class="mosaico"
+            role="option"
+            [attr.data-elemento]="e.id"
+            [attr.aria-selected]="estado.seleccion().has(e.id)"
+            [class.seleccionada]="estado.seleccion().has(e.id)"
+            [class.foco]="estado.foco() === e.id"
+            [class.cortada]="cortados.has(e.id)"
+            [class.destino]="estado.destinoArrastre() === e.id"
+            [draggable]="estado.renombrando() !== e.id"
+            [title]="e.nombre"
+            (click)="$event.stopPropagation(); estado.alClic(e, $event)"
+            (dblclick)="estado.abrir(e)"
+            (contextmenu)="menu($event, e)"
+            (dragstart)="estado.alIniciarArrastre(e, $event)"
+            (dragend)="estado.alTerminarArrastre()"
+            (dragover)="estado.alArrastrarSobre(e, $event)"
+            (dragleave)="estado.alSalirArrastre(e, $event)"
+            (drop)="estado.alSoltarEn(e, $event, leer)"
+          >
+            <div class="vista-previa">
+              <dc-icono-elemento class="grande" [elemento]="e" [grande]="true" />
+              <dc-insignias class="insignias" [elemento]="e" />
+            </div>
+            @if (estado.renombrando() === e.id) {
+              <dc-renombrar [elemento]="e" />
+            } @else {
+              <span class="nombre">{{ e.nombre }}</span>
+            }
+            <span class="detalle dc-mono">{{ e.tipo === 'CARPETA' ? (e.elementos ?? 0) + ' elem.' : (e.tamano | tamano) }}</span>
+          </div>
+        }
+      </div>
+    }
+  }
+}

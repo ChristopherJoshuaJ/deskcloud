@@ -1,0 +1,68 @@
+@let cortados = estado.portapapeles.cortados();
+<div class="tabla" role="grid" [attr.aria-rowcount]="estado.todos().length" [style.--columnas]="columnas()">
+  <div class="encabezado dc-etiqueta" role="row">
+    <button type="button" role="columnheader" (click)="estado.ordenarPor('nombre')">Nombre <i [class]="flecha('nombre')"></i></button>
+    @if (estado.buscando()) {
+      <span role="columnheader">Ubicación</span>
+    }
+    <button type="button" role="columnheader" (click)="estado.ordenarPor('modificadoEn')">Modificado <i [class]="flecha('modificadoEn')"></i></button>
+    <button type="button" role="columnheader" (click)="estado.ordenarPor('tipo')">Tipo <i [class]="flecha('tipo')"></i></button>
+    <span class="derecha">
+      <button type="button" role="columnheader" (click)="estado.ordenarPor('tamano')">Tamaño <i [class]="flecha('tamano')"></i></button>
+      <span class="vistas">
+        <button type="button" class="vista activa" pTooltip="Lista" tooltipPosition="left" aria-label="Lista" (click)="estado.cambiarVista('lista')"><i class="pi pi-list"></i></button>
+        <button type="button" class="vista" pTooltip="Cuadrícula" tooltipPosition="left" aria-label="Cuadrícula" (click)="estado.cambiarVista('cuadricula')"><i class="pi pi-th-large"></i></button>
+      </span>
+    </span>
+  </div>
+
+  @for (grupo of grupos(); track grupo.tipo) {
+    @if (grupo.elementos.length > 0) {
+      <button type="button" class="grupo dc-etiqueta" (click)="estado.alternarGrupo(grupo.tipo)">
+        <i class="pi" [class.pi-chevron-down]="!estado.gruposPlegados().has(grupo.tipo)" [class.pi-chevron-right]="estado.gruposPlegados().has(grupo.tipo)"></i>
+        {{ grupo.titulo }} ({{ grupo.elementos.length }})
+      </button>
+      @if (!estado.gruposPlegados().has(grupo.tipo)) {
+        @for (e of grupo.elementos; track e.id) {
+          <div
+            class="fila"
+            role="row"
+            [attr.data-elemento]="e.id"
+            [attr.aria-selected]="estado.seleccion().has(e.id)"
+            [class.seleccionada]="estado.seleccion().has(e.id)"
+            [class.foco]="estado.foco() === e.id"
+            [class.cortada]="cortados.has(e.id)"
+            [class.destino]="estado.destinoArrastre() === e.id"
+            [draggable]="estado.renombrando() !== e.id"
+            (click)="$event.stopPropagation(); estado.alClic(e, $event)"
+            (dblclick)="estado.abrir(e)"
+            (contextmenu)="menu($event, e)"
+            (dragstart)="estado.alIniciarArrastre(e, $event)"
+            (dragend)="estado.alTerminarArrastre()"
+            (dragover)="estado.alArrastrarSobre(e, $event)"
+            (dragleave)="estado.alSalirArrastre(e, $event)"
+            (drop)="estado.alSoltarEn(e, $event, leer)"
+          >
+            <span class="nombre" role="gridcell">
+              <dc-icono-elemento [elemento]="e" />
+              @if (estado.renombrando() === e.id) {
+                <dc-renombrar [elemento]="e" />
+              } @else {
+                <span class="texto" [title]="e.nombre">{{ e.nombre }}</span>
+              }
+              <dc-insignias [elemento]="e" />
+            </span>
+            @if (estado.buscando()) {
+              <span class="secundario dc-mono ubicacion" role="gridcell" [title]="e.ubicacion || estado.nombreCarpeta()">{{ e.ubicacion || estado.nombreCarpeta() }}</span>
+            }
+            <span class="secundario" role="gridcell">{{ e.modificadoEn | fecha }}</span>
+            <span class="secundario" role="gridcell">{{ tipoLegible(e) }}</span>
+            <span class="secundario dc-mono tamano" role="gridcell">
+              {{ e.tipo === 'CARPETA' ? (e.elementos ?? 0) + ' elem.' : (e.tamano | tamano) }}
+            </span>
+          </div>
+        }
+      }
+    }
+  }
+</div>

@@ -1,0 +1,83 @@
+.panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  width: min(380px, calc(100vw - 32px));
+  background: var(--dc-fondo-barras);
+  border: 1px solid var(--dc-borde);
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 14px;
+
+  > .pi {
+    color: var(--dc-texto);
+  }
+}
+
+.resumen {
+  flex: 1;
+  font-size: 13px;
+  color: var(--dc-texto-destacado);
+}
+
+:host ::ng-deep .barra {
+  height: 3px;
+  border-radius: 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 14px;
+
+  > .pi {
+    width: 16px;
+    color: var(--dc-texto-secundario);
+  }
+
+  &.listo > .pi {
+    color: var(--dc-exito);
+  }
+
+  &.error > .pi,
+  &.error .estado {
+    color: var(--dc-peligro);
+  }
+}
+
+.texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nombre {
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.estado {
+  font-size: 11.5px;
+  color: var(--dc-texto-secundario);
+  font-family: var(--dc-mono);
+}

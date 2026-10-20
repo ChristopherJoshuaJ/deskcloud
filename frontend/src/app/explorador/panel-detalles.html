@@ -1,0 +1,108 @@
+<aside class="panel">
+  @if (varios()) {
+    <div class="vista-previa"><i class="pi pi-clone icono-grande"></i></div>
+    <h2>{{ estado.seleccionados().length }} elementos seleccionados</h2>
+    <dl>
+      <dt class="dc-etiqueta">Contenido</dt>
+      <dd>
+        {{ resumenSeleccion().carpetas }} {{ resumenSeleccion().carpetas === 1 ? 'carpeta' : 'carpetas' }},
+        {{ resumenSeleccion().archivos }} {{ resumenSeleccion().archivos === 1 ? 'archivo' : 'archivos' }}
+      </dd>
+      @if (resumenSeleccion().archivos > 0) {
+        <dt class="dc-etiqueta">Tamaño de los archivos</dt>
+        <dd class="dc-mono">{{ estado.tamanoSeleccion() | tamano }}</dd>
+      }
+    </dl>
+    <div class="acciones">
+      <p-button label="Descargar" icon="pi pi-download" size="small" [outlined]="true" (onClick)="estado.descargar()" />
+    </div>
+  } @else if (objetivo(); as e) {
+    <div class="vista-previa">
+      @switch (urlVista() ? e.tipoVista : null) {
+        @case ('imagen') {
+          <img [src]="urlVista()" [alt]="e.nombre" />
+        }
+        @case ('video') {
+          <video [src]="urlVista()" controls muted preload="metadata"></video>
+        }
+        @case ('audio') {
+          <div class="audio">
+            <i class="pi pi-volume-up icono-grande"></i>
+            <audio [src]="urlVista()" controls preload="none"></audio>
+          </div>
+        }
+        @default {
+          <i [class]="iconoDe(e)" class="icono-grande" [class.carpeta]="e.tipo === 'CARPETA'" [style.color]="e.color ?? null"></i>
+        }
+      }
+    </div>
+
+    <h2 [title]="e.nombre">{{ e.esRaiz ? (detalles()?.ruta?.[0]?.nombre ?? e.nombre) : e.nombre }}</h2>
+    <p class="tipo">{{ e.esRaiz ? (estado.compartido() ? 'Espacio compartido' : 'Mi espacio') : tipoLegible(e) }}</p>
+
+    <div class="acciones">
+      @if (e.id !== estado.carpeta()?.id) {
+        <p-button label="Abrir" icon="pi pi-external-link" size="small" (onClick)="estado.abrir(e)" />
+      }
+      <p-button [label]="e.tipo === 'CARPETA' ? 'ZIP' : 'Descargar'" icon="pi pi-download" size="small" [outlined]="true" (onClick)="estado.acciones.descargar([e])" />
+      @if (e.tipo === 'ARCHIVO') {
+        <p-button icon="pi pi-history" size="small" [outlined]="true" ariaLabel="Versiones" (onClick)="estado.acciones.versiones(e)" />
+      }
+    </div>
+
+    @if (e.propuestaPendiente) {
+      <div class="aviso">
+        <i class="pi pi-hourglass"></i>
+        <span>En votación: {{ nombrePropuesta[e.propuestaPendiente.tipo].toLowerCase() }}.</span>
+        <p-button label="Ver" size="small" [text]="true" (onClick)="estado.verVotacion(e)" />
+      </div>
+    }
+    @if (e.notaColor) {
+      <div class="nota" [style.border-left-color]="e.color ?? null">
+        <span>"{{ e.notaColor.texto }}"</span>
+        <small>{{ e.notaColor.autor?.nombre ?? 'Alguien' }} · {{ e.notaColor.creadaEn | fecha }}</small>
+      </div>
+    }
+
+    <dl>
+      @if (e.tipo === 'CARPETA') {
+        <dt class="dc-etiqueta">Contenido</dt>
+        <dd>
+          @if (detalles()?.resumen; as r) {
+            {{ r.carpetas }} {{ r.carpetas === 1 ? 'carpeta' : 'carpetas' }}, {{ r.archivos }} {{ r.archivos === 1 ? 'archivo' : 'archivos' }}
+            <span class="dc-mono dc-secundario">· {{ r.tamanoTotal | tamano }}</span>
+          } @else {
+            <span class="dc-secundario">…</span>
+          }
+        </dd>
+      } @else {
+        <dt class="dc-etiqueta">Tamaño</dt>
+        <dd class="dc-mono">{{ e.tamano | tamano }}</dd>
+        @if (e.version) {
+          <dt class="dc-etiqueta">Versión</dt>
+          <dd class="dc-mono">v{{ e.version }}</dd>
+        }
+      }
+      @if (!e.esRaiz) {
+        <dt class="dc-etiqueta">Ubicación</dt>
+        <dd class="dc-mono ruta">{{ ubicacion() || '…' }}</dd>
+      }
+      <dt class="dc-etiqueta">Modificado</dt>
+      <dd>{{ e.modificadoEn | fecha: true }}</dd>
+      <dt class="dc-etiqueta">Creado</dt>
+      <dd>{{ e.creadoEn | fecha: true }}</dd>
+      @if (e.color) {
+        <dt class="dc-etiqueta">Color</dt>
+        <dd class="color">
+          <span class="muestra" [style.background]="e.color"></span>
+          <span class="dc-mono">{{ e.color }}</span>
+          @if (estado.compartido()) {
+            <span class="dc-secundario">{{ e.colorEsPersonal ? '(solo tú lo ves)' : '(del grupo)' }}</span>
+          }
+        </dd>
+      }
+    </dl>
+  } @else {
+    <div class="dc-vacio"><i class="pi pi-info-circle"></i><span>Selecciona un elemento para ver sus detalles</span></div>
+  }
+</aside>

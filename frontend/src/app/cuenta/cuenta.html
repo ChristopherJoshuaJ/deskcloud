@@ -1,0 +1,125 @@
+@let usuario = sesion.usuario();
+<div class="dc-pagina">
+  <h1>Mi cuenta</h1>
+  <p class="dc-secundario">{{ usuario?.correo }} · con DeskCloud desde {{ usuario?.creadoEn | fecha }}</p>
+
+  <div class="rejilla">
+    <section class="dc-tarjeta">
+      <h2>Perfil</h2>
+      <form (ngSubmit)="guardarNombre()">
+        <div class="dc-campo">
+          <label for="nombre">Nombre</label>
+          <input pInputText id="nombre" name="nombre" maxlength="80" [(ngModel)]="nombre" />
+        </div>
+        <div class="dc-campo">
+          <label for="correo">Correo</label>
+          <input pInputText id="correo" name="correo" [value]="usuario?.correo ?? ''" [disabled]="true" />
+        </div>
+        <p-button type="submit" label="Guardar" size="small" [disabled]="!nombreCambiado()" [loading]="guardandoNombre()" />
+      </form>
+    </section>
+
+    <section class="dc-tarjeta">
+      <h2>Contraseña</h2>
+      <form (ngSubmit)="cambiarContrasena()">
+        <div class="dc-campo">
+          <label for="actual">Contraseña actual</label>
+          <p-password inputId="actual" name="actual" [(ngModel)]="actual" [feedback]="false" [toggleMask]="true" [fluid]="true" autocomplete="current-password" />
+          @if (erroresContrasena()['actual']; as m) {
+            <small class="dc-error-campo">{{ m }}</small>
+          }
+        </div>
+        <div class="dc-campo">
+          <label for="nueva">Nueva contraseña</label>
+          <p-password inputId="nueva" name="nueva" [(ngModel)]="nueva" [feedback]="false" [toggleMask]="true" [fluid]="true" autocomplete="new-password" />
+          @if (erroresContrasena()['nueva']; as m) {
+            <small class="dc-error-campo">{{ m }}</small>
+          } @else {
+            <small class="dc-secundario">Al menos 8 caracteres. Se cerrarán tus sesiones en otros dispositivos.</small>
+          }
+        </div>
+        <div class="dc-campo">
+          <label for="repetida">Repite la nueva contraseña</label>
+          <p-password inputId="repetida" name="repetida" [(ngModel)]="repetida" [feedback]="false" [toggleMask]="true" [fluid]="true" autocomplete="new-password" />
+          @if (erroresContrasena()['repetida']; as m) {
+            <small class="dc-error-campo">{{ m }}</small>
+          }
+        </div>
+        <p-button type="submit" label="Cambiar contraseña" size="small" [disabled]="!actual() || !nueva() || !repetida()" [loading]="guardandoContrasena()" />
+      </form>
+    </section>
+  </div>
+
+  <h2>Espacio usado</h2>
+  <p class="dc-secundario nota">Es solo informativo: DeskCloud no pone límites de espacio.</p>
+  @if (uso(); as u) {
+    <div class="usos">
+      @for (e of [u.personal].concat(u.compartidos); track e.id; let primero = $first) {
+        <div class="dc-tarjeta uso">
+          <div class="cabeza">
+            <i class="pi" [class.pi-home]="primero" [class.pi-users]="!primero"></i>
+            <span class="nombre">{{ primero ? 'Mi espacio' : e.nombre }}</span>
+            <span class="dc-mono total">{{ e.total | tamano }}</span>
+          </div>
+          <div class="barra" [attr.aria-label]="'Total ' + e.total + ' bytes'">
+            <span class="archivos" [style.width.%]="porcentaje(e.archivos, e.total)"></span>
+            <span class="versiones" [style.width.%]="porcentaje(e.versionesAnteriores, e.total)"></span>
+            <span class="papelera" [style.width.%]="porcentaje(e.papelera, e.total)"></span>
+          </div>
+          <ul class="leyenda">
+            <li><span class="punto archivos"></span>Archivos ({{ e.cantidadArchivos }}) <span class="dc-mono">{{ e.archivos | tamano }}</span></li>
+            <li><span class="punto versiones"></span>Versiones anteriores <span class="dc-mono">{{ e.versionesAnteriores | tamano }}</span></li>
+            <li><span class="punto papelera"></span>Papelera <span class="dc-mono">{{ e.papelera | tamano }}</span></li>
+          </ul>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="dc-secundario">Calculando…</p>
+  }
+
+  <h2>Sesiones abiertas</h2>
+  <section class="dc-tarjeta">
+    <ul class="dc-lista-simple">
+      @for (s of sesiones(); track s.id) {
+        <li>
+          <i class="pi pi-desktop icono-sesion"></i>
+          <div class="sesion">
+            <span>
+              {{ describirNavegador(s.navegador) }}
+              @if (s.actual) {
+                <p-tag value="Esta sesión" severity="info" />
+              }
+            </span>
+            <span class="dc-secundario detalle">
+              Iniciada {{ s.creadaEn | fecha }}
+              @if (s.ultimoUso) {
+                · último uso {{ s.ultimoUso | relativa }}
+              }
+            </span>
+          </div>
+          @if (!s.actual) {
+            <p-button label="Cerrar" size="small" [text]="true" severity="danger" (onClick)="cerrarSesion(s)" />
+          }
+        </li>
+      } @empty {
+        <li class="dc-secundario">Cargando…</li>
+      }
+    </ul>
+    @if ((sesiones()?.length ?? 0) > 1) {
+      <p-button label="Cerrar todas las demás" icon="pi pi-sign-out" size="small" [outlined]="true" severity="danger" (onClick)="cerrarOtras()" />
+    }
+  </section>
+
+  <h2 class="peligro">Eliminar cuenta</h2>
+  <section class="dc-tarjeta zona-peligro">
+    <p>Borra Mi espacio por completo y te saca de todos los espacios compartidos. No se puede deshacer.</p>
+    <form class="eliminar" (ngSubmit)="eliminarCuenta()">
+      <p-password name="contrasenaEliminar" placeholder="Tu contraseña" [(ngModel)]="contrasenaEliminar" [feedback]="false" [toggleMask]="true" autocomplete="current-password" />
+      <p-button type="submit" label="Eliminar mi cuenta" severity="danger" size="small" [disabled]="!contrasenaEliminar()" [loading]="eliminando()" />
+    </form>
+    @if (errorEliminar()) {
+      <small class="dc-error-campo">{{ errorEliminar() }}</small>
+    }
+  </section>
+</div>

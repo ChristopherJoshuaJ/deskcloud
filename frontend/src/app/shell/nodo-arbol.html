@@ -1,0 +1,42 @@
+@let carpeta = nodo();
+<div
+  class="fila"
+  role="treeitem"
+  tabindex="0"
+  [attr.aria-label]="carpeta.nombre"
+  [attr.aria-expanded]="tieneHijos() ? abierto() : null"
+  [class.activo]="activo()"
+  [class.encima]="encima()"
+  [style.padding-left.px]="8 + nivel() * 14"
+  (click)="abrirCarpeta()"
+  (keydown.enter)="abrirCarpeta()"
+  (keydown.arrowright)="!abierto() && alternar($event)"
+  (keydown.arrowleft)="abierto() && alternar($event)"
+  (contextmenu)="menuContextual($event)"
+  (dragover)="alArrastrarEncima($event)"
+  (dragleave)="alSalir($event)"
+  (drop)="alSoltar($event)"
+>
+  <button type="button" class="flecha" tabindex="-1" [class.oculta]="!tieneHijos()" (click)="alternar($event)" [attr.aria-label]="abierto() ? 'Contraer' : 'Expandir'">
+    <i class="pi" [class.pi-chevron-right]="!abierto()" [class.pi-chevron-down]="abierto()"></i>
+  </button>
+  <i [class]="icono()" class="icono" [style.color]="carpeta.color || null"></i>
+  <span class="nombre" [title]="carpeta.nombre">{{ carpeta.nombre }}</span>
+  @if (insignia() > 0) {
+    <span class="insignia" title="Votaciones pendientes">{{ insignia() }}</span>
+  }
+  @if (carpeta.sinVer) {
+    <span class="dc-punto" title="Hay cambios que no has visto"></span>
+  }
+</div>
+
+@if (abierto()) {
+  <div role="group">
+    @if (cargando() && hijos() === null) {
+      <div class="cargando" [style.padding-left.px]="30 + nivel() * 14"><i class="pi pi-spin pi-spinner"></i></div>
+    }
+    @for (hijo of hijos(); track hijo.id) {
+      <dc-nodo-arbol [nodo]="hijo" [nivel]="nivel() + 1" [ancestros]="rutaHijos()" [sincronizar]="sincronizar()" />
+    }
+  </div>
+}

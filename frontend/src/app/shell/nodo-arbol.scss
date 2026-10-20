@@ -1,0 +1,111 @@
+:host {
+  display: block;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding-right: 10px;
+  border-radius: 6px;
+  margin: 1px 6px;
+  cursor: pointer;
+  color: var(--dc-texto);
+  user-select: none;
+  outline: none;
+  position: relative;
+
+  &:hover {
+    background: var(--dc-hover);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--dc-boton-activo);
+  }
+
+  &.activo {
+    background: var(--dc-seleccion);
+    color: var(--dc-texto-destacado);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--dc-texto);
+    }
+  }
+
+  &.encima {
+    background: var(--dc-boton-activo);
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.flecha {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: none;
+  color: var(--dc-texto-secundario);
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+
+  .pi {
+    font-size: 10px;
+  }
+
+  &:hover {
+    background: var(--dc-divisor);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.oculta {
+    visibility: hidden;
+  }
+}
+
+.icono {
+  flex: none;
+  color: var(--dc-carpeta);
+  font-size: 15px;
+}
+
+.nombre {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13.5px;
+}
+
+.insignia {
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--dc-marca);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+}
+
+.cargando {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  color: var(--dc-texto-secundario);
+  font-size: 12px;
+}

@@ -1,0 +1,44 @@
+<div class="shell">
+  <header class="titulo">
+    <button type="button" class="alternar" (click)="lateralOculta.set(!lateralOculta())" aria-label="Mostrar u ocultar la barra lateral">
+      <i class="pi pi-bars"></i>
+    </button>
+    <a class="marca" [routerLink]="['/carpeta', sesion.usuario()?.raizId]">
+      <img src="favicon.svg" alt="" width="22" height="22" />
+      <span>DeskCloud</span>
+    </a>
+    <span class="espacio"></span>
+    <dc-avisos />
+    <button type="button" class="usuario" (click)="abrirMenuUsuario($event)" aria-label="Menú de la cuenta">
+      <span class="avatar">{{ iniciales() }}</span>
+      <span class="nombre">{{ sesion.usuario()?.nombre }}</span>
+      <i class="pi pi-angle-down"></i>
+    </button>
+    <p-menu #menuUsuario [model]="opcionesUsuario()" [popup]="true" appendTo="body" />
+  </header>
+
+  <div class="cuerpo">
+    @if (!lateralOculta()) {
+      <aside class="lateral" [class.flotante]="lateralFlotante()" [style.width.px]="anchoLateral()">
+        <dc-barra-lateral />
+      </aside>
+      @if (lateralFlotante()) {
+        <div class="fondo-lateral" (click)="lateralOculta.set(true)"></div>
+      } @else {
+        <div class="divisor" (pointerdown)="redimensionar($event)"></div>
+      }
+    }
+    <main class="contenido">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<dc-panel-subidas />
+<dc-dialogo-texto />
+<dc-dialogo-conflictos />
+<dc-dialogo-propuesta />
+<dc-dialogo-color />
+<dc-dialogo-versiones />
+<dc-visor />
+<dc-editor />

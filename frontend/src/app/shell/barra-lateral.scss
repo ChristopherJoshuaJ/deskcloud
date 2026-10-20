@@ -1,0 +1,109 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.barra {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0 24px;
+}
+
+section {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--dc-divisor);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.titulo {
+  margin: 8px 14px 6px;
+}
+
+.con-boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 6px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.vacio {
+  margin: 2px 16px 6px;
+  font-size: 12.5px;
+  color: var(--dc-texto-secundario);
+  line-height: 1.4;
+}
+
+.enlace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  margin: 1px 6px;
+  padding: 0 10px 0 32px;
+  border-radius: 6px;
+  color: var(--dc-texto);
+  text-decoration: none;
+  font-size: 13.5px;
+
+  .pi {
+    color: var(--dc-texto-secundario);
+  }
+
+  &:hover {
+    background: var(--dc-hover);
+  }
+
+  &.activo {
+    background: var(--dc-seleccion);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.encima {
+    background: var(--dc-boton-activo);
+  }
+}
+
+.invitacion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 6px 6px;
+  padding: 6px 4px 6px 10px;
+  border-radius: 6px;
+  background: rgba(106, 78, 160, 0.14);
+  border: 1px solid rgba(106, 78, 160, 0.35);
+
+  > .pi {
+    color: #b39ae0;
+  }
+
+  .texto {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nombre {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dc-texto-destacado);
+    font-size: 13px;
+  }
+
+  .de {
+    font-size: 11.5px;
+    color: var(--dc-texto-secundario);
+  }
+}

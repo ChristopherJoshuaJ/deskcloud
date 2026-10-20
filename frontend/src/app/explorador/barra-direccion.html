@@ -1,0 +1,58 @@
+<div class="barra">
+  <div class="navegacion">
+    <button type="button" class="boton" [disabled]="!navegacion.puedeIrAtras()" (click)="navegacion.atras()" pTooltip="Atrás (Alt+←)" tooltipPosition="bottom" aria-label="Atrás">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+    <button type="button" class="boton" [disabled]="!navegacion.puedeIrAdelante()" (click)="navegacion.adelante()" pTooltip="Adelante (Alt+→)" tooltipPosition="bottom" aria-label="Adelante">
+      <i class="pi pi-arrow-right"></i>
+    </button>
+    <button type="button" class="boton" [disabled]="!navegacion.puedeSubir()" (click)="navegacion.subir()" pTooltip="Subir un nivel (Alt+↑)" tooltipPosition="bottom" aria-label="Subir un nivel">
+      <i class="pi pi-arrow-up"></i>
+    </button>
+    <button type="button" class="boton" (click)="estado.recargar()" pTooltip="Actualizar (F5)" tooltipPosition="bottom" aria-label="Actualizar">
+      <i class="pi pi-refresh" [class.pi-spin]="estado.cargando()"></i>
+    </button>
+  </div>
+
+  <nav class="ruta dc-mono" aria-label="Ruta" #contenedorRuta>
+    <i [class]="iconoRaiz()" class="icono-raiz"></i>
+    @for (parte of estado.ruta(); track parte.id; let i = $index, ultimo = $last) {
+      <button
+        type="button"
+        class="tramo"
+        [class.actual]="ultimo && !estado.buscando()"
+        [class.destino]="destino() === parte.id"
+        (click)="navegacion.abrir(parte.id)"
+        (dragover)="alArrastrarSobre(parte, i, $event)"
+        (dragleave)="destino.set(null)"
+        (drop)="alSoltar(parte, $event)"
+      >
+        {{ parte.nombre }}
+      </button>
+      <button type="button" class="separador" (click)="mostrarSubcarpetas($event, parte)" aria-label="Subcarpetas">
+        <i class="pi pi-chevron-right"></i>
+      </button>
+    }
+    @if (estado.buscando()) {
+      <span class="tramo actual busqueda">Resultados de "{{ estado.consulta() }}"</span>
+    }
+  </nav>
+
+  <p-iconfield class="buscar">
+    <p-inputicon styleClass="pi pi-search" />
+    <input
+      #campoBusqueda
+      pInputText
+      type="search"
+      name="buscar"
+      autocomplete="off"
+      [placeholder]="lugar() ? 'Buscar en ' + lugar() : 'Buscar'"
+      [ngModel]="texto()"
+      (ngModelChange)="alEscribir($event)"
+      (keydown.enter)="buscarAhora()"
+      (keydown.escape)="limpiarBusqueda(); campoBusqueda.blur()"
+    />
+  </p-iconfield>
+</div>
+
+<p-menu #menuSubcarpetas [model]="subcarpetas()" [popup]="true" appendTo="body" styleClass="dc-menu-subcarpetas" />

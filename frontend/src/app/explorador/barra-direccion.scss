@@ -1,0 +1,125 @@
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 12px 0 8px;
+  background: var(--dc-fondo-barras);
+  border-bottom: 1px solid var(--dc-divisor);
+}
+
+.navegacion {
+  display: flex;
+  gap: 2px;
+}
+
+.boton {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--dc-texto);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+
+  &:disabled {
+    color: var(--dc-borde);
+    cursor: default;
+  }
+}
+
+.ruta {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 10px;
+  background: var(--dc-fondo-campos);
+  border: 1px solid var(--dc-borde);
+  border-radius: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.icono-raiz {
+  color: var(--dc-texto-secundario);
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.tramo {
+  flex: none;
+  height: 26px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--dc-texto);
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.actual {
+    color: var(--dc-texto-destacado);
+  }
+
+  &.destino {
+    background: var(--dc-boton-activo);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.busqueda {
+    cursor: default;
+    font-family: var(--dc-fuente);
+    font-size: 13px;
+  }
+}
+
+.separador {
+  flex: none;
+  width: 18px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--dc-texto-secundario);
+  cursor: pointer;
+  padding: 0;
+
+  .pi {
+    font-size: 9px;
+  }
+
+  &:hover {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.buscar {
+  width: clamp(180px, 24vw, 300px);
+
+  input {
+    width: 100%;
+    height: 34px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,150 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.titulo {
+  flex: none;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 0 6px;
+  background: var(--dc-fondo-barras);
+  border-bottom: 1px solid var(--dc-divisor);
+}
+
+.alternar {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--dc-texto-secundario);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--dc-texto-destacado);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 4px 6px;
+}
+
+.espacio {
+  flex: 1;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 8px 0 4px;
+  border: none;
+  border-radius: 17px;
+  background: none;
+  color: var(--dc-texto);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dc-hover);
+  }
+
+  .nombre {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .pi {
+    font-size: 12px;
+    color: var(--dc-texto-secundario);
+  }
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--dc-marca);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.cuerpo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  position: relative;
+}
+
+.lateral {
+  flex: none;
+  background: var(--dc-fondo-barras);
+  min-width: 0;
+
+  &.flotante {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    max-width: 85vw;
+    border-right: 1px solid var(--dc-divisor);
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.fondo-lateral {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  background: rgba(13, 17, 23, 0.6);
+}
+
+.divisor {
+  flex: none;
+  width: 5px;
+  margin-left: -2px;
+  margin-right: -3px;
+  position: relative;
+  z-index: 2;
+  cursor: col-resize;
+  border-left: 1px solid var(--dc-divisor);
+
+  &:hover {
+    border-left-color: var(--dc-boton-activo);
+  }
+}
+
+.contenido {
+  flex: 1;
+  min-width: 0;
+  background: var(--dc-fondo-archivos);
+}
+
+@media (max-width: 720px) {
+  .usuario .nombre {
+    display: none;
+  }
+}

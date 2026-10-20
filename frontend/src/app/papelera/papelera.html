@@ -1,0 +1,95 @@
+@let compartida = esCompartida();
+<div class="papelera" (click)="limpiarSeleccion()">
+  <header class="cabecera">
+    <div class="titulo">
+      <i class="pi pi-trash"></i>
+      <div>
+        <h1>{{ compartida ? 'Papelera de ' + (espacio()?.nombre ?? 'un espacio compartido') : 'Papelera' }}</h1>
+        <p class="dc-secundario">
+          @if (compartida) {
+            Restaurar y eliminar definitivamente se deciden por votación. Esta papelera no se vacía sola.
+          } @else {
+            Lo que lleve 30 días en la papelera se elimina solo.
+          }
+        </p>
+      </div>
+    </div>
+    @if (compartida) {
+      <a class="volver" [routerLink]="['/carpeta', espacio()?.raizId]" (click)="$event.stopPropagation()"><i class="pi pi-arrow-left"></i> Volver al espacio</a>
+    }
+  </header>
+
+  <div class="comandos" (click)="$event.stopPropagation()">
+    <p-button [label]="compartida ? 'Proponer restaurar' : 'Restaurar'" icon="pi pi-replay" size="small" [text]="true" [disabled]="seleccionados().length === 0 || trabajando()" (onClick)="restaurar()" />
+    <p-button [label]="compartida ? 'Proponer eliminar definitivamente' : 'Eliminar definitivamente'" icon="pi pi-times-circle" size="small" [text]="true" severity="danger" [disabled]="seleccionados().length === 0 || trabajando()" (onClick)="eliminar()" />
+    <span class="divisor"></span>
+    <p-button [label]="compartida ? 'Proponer vaciar' : 'Vaciar papelera'" icon="pi pi-trash" size="small" [text]="true" severity="danger" [disabled]="!elementos()?.length || trabajando()" (onClick)="vaciar()" />
+    <span class="espacio"></span>
+    @if (compartida) {
+      <p-button label="Votaciones" icon="pi pi-check-square" size="small" [text]="true" (onClick)="verVotaciones()" />
+    }
+    <p-button icon="pi pi-refresh" size="small" [text]="true" pTooltip="Actualizar" ariaLabel="Actualizar" (onClick)="cargar()" />
+  </div>
+
+  <div class="area">
+    @if (error()) {
+      <div class="dc-vacio"><i class="pi pi-exclamation-circle"></i><span>{{ error() }}</span></div>
+    } @else if (elementos() === null) {
+      <div class="dc-vacio"><i class="pi pi-spin pi-spinner"></i></div>
+    } @else if (elementos()!.length === 0) {
+      <div class="dc-vacio"><i class="pi pi-trash"></i><span>La papelera está vacía.</span></div>
+    } @else {
+      <div class="tabla" role="grid">
+        <div class="fila encabezado dc-etiqueta" role="row">
+          <span>Nombre</span>
+          <span>Ubicación original</span>
+          <span>Eliminado</span>
+          <span>{{ compartida ? 'Estado' : 'Se elimina' }}</span>
+          <span>Tamaño</span>
+        </div>
+        @for (e of elementos(); track e.id) {
+          <div
+            class="fila"
+            role="row"
+            [class.seleccionada]="seleccion().has(e.id)"
+            [attr.aria-selected]="seleccion().has(e.id)"
+            (click)="alClic(e, $event)"
+            (contextmenu)="abrirMenu(e, $event)"
+          >
+            <span class="nombre">
+              <i [class]="iconoDe(e)" [class.carpeta]="e.tipo === 'CARPETA'" [style.color]="e.color ?? null"></i>
+              <span class="texto" [title]="e.nombre">{{ e.nombre }}</span>
+            </span>
+            <span class="secundario dc-mono" [title]="ubicacion(e)">{{ ubicacion(e) }}</span>
+            <span class="secundario" [title]="e.eliminadoEn | fecha: true">{{ e.eliminadoEn | relativa }}</span>
+            <span class="secundario">
+              @if (compartida) {
+                @if (e.propuestaPendiente) {
+                  <span class="votacion"><i class="pi pi-hourglass"></i> {{ nombrePropuesta[e.propuestaPendiente.tipo] }}</span>
+                } @else {
+                  —
+                }
+              } @else if (e.diasRestantes !== null) {
+                <span [class.pronto]="e.diasRestantes <= 3" [title]="e.seEliminaEn | fecha: true">
+                  {{ e.diasRestantes === 0 ? 'hoy' : e.diasRestantes === 1 ? 'en 1 día' : 'en ' + e.diasRestantes + ' días' }}
+                </span>
+              }
+            </span>
+            <span class="secundario dc-mono">{{ e.tipo === 'CARPETA' ? (e.elementos ?? 0) + ' elem.' : (e.tamano | tamano) }}</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <footer class="estado">
+    @let cantidad = elementos()?.length ?? 0;
+    <span>{{ cantidad }} {{ cantidad === 1 ? 'elemento' : 'elementos' }}</span>
+    @if (seleccionados().length > 0) {
+      <span class="separador"></span>
+      <span>{{ seleccionados().length }} {{ seleccionados().length === 1 ? 'seleccionado' : 'seleccionados' }}</span>
+    }
+  </footer>
+</div>
+
+<p-contextmenu #menu [model]="opcionesMenu()" appendTo="body" />

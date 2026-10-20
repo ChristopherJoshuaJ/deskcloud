@@ -1,0 +1,66 @@
+<main class="acceso">
+  <section class="tarjeta">
+    <header>
+      <img src="favicon.svg" alt="" width="44" height="44" />
+      <div>
+        <h1>DeskCloud</h1>
+        <p class="dc-secundario">Tus archivos en la nube, ordenados como en tu escritorio.</p>
+      </div>
+    </header>
+
+    <h2>{{ esRegistro() ? 'Crear una cuenta' : 'Iniciar sesión' }}</h2>
+
+    @if (error()) {
+      <p-message severity="error" styleClass="mensaje">{{ error() }}</p-message>
+    }
+
+    <form (ngSubmit)="enviar()" novalidate>
+      @if (esRegistro()) {
+        <div class="dc-campo">
+          <label for="nombre">Nombre</label>
+          <input pInputText id="nombre" name="nombre" autocomplete="name" maxlength="80" [(ngModel)]="nombre" [invalid]="!!erroresCampo()['nombre']" />
+          @if (erroresCampo()['nombre']; as mensaje) {
+            <small class="dc-error-campo">{{ mensaje }}</small>
+          }
+        </div>
+      }
+
+      <div class="dc-campo">
+        <label for="correo">Correo</label>
+        <input pInputText id="correo" name="correo" type="email" autocomplete="email" [(ngModel)]="correo" [invalid]="!!erroresCampo()['correo']" />
+        @if (erroresCampo()['correo']; as mensaje) {
+          <small class="dc-error-campo">{{ mensaje }}</small>
+        }
+      </div>
+
+      <div class="dc-campo">
+        <label for="contrasena">Contraseña</label>
+        <p-password
+          inputId="contrasena"
+          name="contrasena"
+          [(ngModel)]="contrasena"
+          [feedback]="false"
+          [toggleMask]="true"
+          [fluid]="true"
+          [invalid]="!!erroresCampo()['contrasena']"
+          [autocomplete]="esRegistro() ? 'new-password' : 'current-password'"
+        />
+        @if (erroresCampo()['contrasena']; as mensaje) {
+          <small class="dc-error-campo">{{ mensaje }}</small>
+        } @else if (esRegistro()) {
+          <small class="dc-secundario">Al menos 8 caracteres.</small>
+        }
+      </div>
+
+      <p-button type="submit" [label]="esRegistro() ? 'Crear cuenta' : 'Entrar'" [loading]="enviando()" [fluid]="true" />
+    </form>
+
+    <p class="cambiar">
+      @if (esRegistro()) {
+        ¿Ya tienes cuenta? <a routerLink="/login" [queryParams]="volver() ? { volver: volver() } : {}">Inicia sesión</a>
+      } @else {
+        ¿No tienes cuenta? <a routerLink="/registro" [queryParams]="volver() ? { volver: volver() } : {}">Crea una</a>
+      }
+    </p>
+  </section>
+</main>

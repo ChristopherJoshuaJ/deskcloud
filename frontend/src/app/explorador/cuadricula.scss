@@ -1,0 +1,153 @@
+:host {
+  display: block;
+  padding-bottom: 24px;
+}
+
+.encabezado {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 13px 0 19px;
+  background: var(--dc-fondo-barras);
+  border-bottom: 1px solid var(--dc-divisor);
+
+  .pi {
+    font-size: 11px;
+  }
+}
+
+.vistas {
+  display: flex;
+  gap: 2px;
+}
+
+.vista {
+  width: 26px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+
+  .pi {
+    font-size: 12px;
+  }
+
+  &:hover {
+    color: var(--dc-texto-destacado);
+  }
+
+  &.activa {
+    background: var(--dc-boton-activo);
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.grupo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  margin-top: 6px;
+  padding: 0 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+
+  .pi {
+    font-size: 10px;
+  }
+
+  &:hover {
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.mosaicos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 132px);
+  gap: 8px;
+  padding: 4px 12px 8px;
+}
+
+.mosaico {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  user-select: none;
+  cursor: default;
+  min-width: 0;
+
+  &:hover {
+    background: var(--dc-hover);
+  }
+
+  &.seleccionada {
+    background: var(--dc-seleccion);
+  }
+
+  &.seleccionada.foco {
+    border-color: #2b4670;
+  }
+
+  &.cortada {
+    opacity: 0.45;
+  }
+
+  &.destino {
+    background: var(--dc-boton-activo);
+    border-color: var(--dc-texto);
+  }
+}
+
+.vista-previa {
+  position: relative;
+  width: 96px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+}
+
+.insignias {
+  position: absolute;
+  right: -4px;
+  top: -2px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.85);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.nombre {
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--dc-texto-destacado);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.detalle {
+  font-size: 11px;
+  color: var(--dc-texto-secundario);
+}

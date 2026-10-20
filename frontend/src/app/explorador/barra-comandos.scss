@@ -1,0 +1,87 @@
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 46px;
+  padding: 0 10px;
+  background: var(--dc-fondo-barras);
+  border-bottom: 1px solid var(--dc-divisor);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.comando {
+  flex: none;
+  height: 34px;
+  min-width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--dc-texto);
+  font-size: 13px;
+  cursor: pointer;
+
+  .pi {
+    font-size: 15px;
+  }
+
+  .flecha {
+    font-size: 11px;
+    color: var(--dc-texto-secundario);
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+
+  &:disabled {
+    color: #34405a;
+    cursor: default;
+  }
+
+  &.activo {
+    background: var(--dc-boton-activo);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.principal:not(:disabled) .pi:first-child {
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.divisor {
+  flex: none;
+  width: 1px;
+  height: 22px;
+  margin: 0 6px;
+  background: var(--dc-borde);
+}
+
+.espacio {
+  flex: 1;
+}
+
+.insignia {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--dc-marca);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 900px) {
+  .con-texto:not(.principal) span:not(.insignia) {
+    display: none;
+  }
+}

@@ -1,0 +1,75 @@
+@let compartido = estado.compartido();
+<div class="barra" role="toolbar" aria-label="Comandos">
+  <button type="button" class="comando con-texto principal" [disabled]="!puedeCrear()" (click)="menuNuevo.toggle($event)">
+    <i class="pi pi-plus-circle"></i><span>Nuevo</span><i class="pi pi-angle-down flecha"></i>
+  </button>
+  <p-menu #menuNuevo [model]="opcionesNuevo()" [popup]="true" appendTo="body" />
+
+  <span class="divisor"></span>
+
+  <button type="button" class="comando" [disabled]="!hay()" (click)="estado.cortar()" pTooltip="Cortar (Ctrl+X)" tooltipPosition="bottom" aria-label="Cortar">
+    <i class="pi pi-clipboard"></i>
+  </button>
+  <button type="button" class="comando" [disabled]="!hay()" (click)="estado.copiar()" pTooltip="Copiar (Ctrl+C)" tooltipPosition="bottom" aria-label="Copiar">
+    <i class="pi pi-copy"></i>
+  </button>
+  <button type="button" class="comando" [disabled]="!puedePegar()" (click)="estado.pegar()" pTooltip="Pegar (Ctrl+V)" tooltipPosition="bottom" aria-label="Pegar">
+    <i class="pi pi-file-import"></i>
+  </button>
+  <button type="button" class="comando" [disabled]="!estado.unico()" (click)="estado.empezarRenombre()" pTooltip="Cambiar nombre (F2)" tooltipPosition="bottom" aria-label="Cambiar nombre">
+    <i class="pi pi-pencil"></i>
+  </button>
+  <button type="button" class="comando" [disabled]="!estado.unico()" (click)="estado.acciones.cambiarColor(estado.unico()!)" pTooltip="Color" tooltipPosition="bottom" aria-label="Color">
+    <i class="pi pi-palette"></i>
+  </button>
+  <button type="button" class="comando" [disabled]="!hay()" (click)="estado.descargar()" pTooltip="Descargar" tooltipPosition="bottom" aria-label="Descargar">
+    <i class="pi pi-download"></i>
+  </button>
+  <button
+    type="button"
+    class="comando"
+    [class.con-texto]="compartido"
+    [disabled]="!hay()"
+    (click)="estado.eliminar()"
+    [pTooltip]="compartido ? 'En un espacio compartido eliminar se vota (Supr)' : 'Enviar a la papelera (Supr)'"
+    tooltipPosition="bottom"
+    [attr.aria-label]="compartido ? 'Proponer eliminar' : 'Eliminar'"
+  >
+    <i class="pi pi-trash"></i>
+    @if (compartido) {
+      <span>Proponer eliminar</span>
+    }
+  </button>
+
+  <span class="divisor"></span>
+
+  <button type="button" class="comando con-texto" (click)="menuOrden.toggle($event)">
+    <i class="pi pi-sort-alt"></i><span>Ordenar</span><i class="pi pi-angle-down flecha"></i>
+  </button>
+  <p-menu #menuOrden [model]="opcionesOrden()" [popup]="true" appendTo="body" />
+  <button type="button" class="comando con-texto" (click)="menuVista.toggle($event)">
+    <i class="pi" [class.pi-list]="estado.vista() === 'lista'" [class.pi-th-large]="estado.vista() === 'cuadricula'"></i><span>Vista</span><i class="pi pi-angle-down flecha"></i>
+  </button>
+  <p-menu #menuVista [model]="opcionesVista()" [popup]="true" appendTo="body" />
+
+  <span class="divisor"></span>
+
+  <button type="button" class="comando" (click)="menuMas.toggle($event)" pTooltip="Más opciones" tooltipPosition="bottom" aria-label="Más opciones">
+    <i class="pi pi-ellipsis-h"></i>
+  </button>
+  <p-menu #menuMas [model]="opcionesMas()" [popup]="true" appendTo="body" />
+
+  <span class="espacio"></span>
+
+  @if (estado.espacioCompartido(); as espacio) {
+    <button type="button" class="comando con-texto" (click)="irAlEspacio()" pTooltip="Miembros, votaciones y actividad" tooltipPosition="bottom">
+      <i class="pi pi-users"></i><span>Espacio</span>
+      @if (espacio.votosPendientes > 0) {
+        <span class="insignia">{{ espacio.votosPendientes }}</span>
+      }
+    </button>
+  }
+  <button type="button" class="comando con-texto" [class.activo]="estado.detallesVisible()" (click)="estado.alternarDetalles()" aria-label="Panel de detalles">
+    <i class="pi pi-info-circle"></i><span>Detalles</span>
+  </button>
+</div>

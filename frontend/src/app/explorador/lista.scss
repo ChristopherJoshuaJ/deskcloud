@@ -1,0 +1,164 @@
+:host {
+  display: block;
+}
+
+.tabla {
+  min-width: 640px;
+  padding-bottom: 24px;
+}
+
+.encabezado,
+.fila {
+  display: grid;
+  grid-template-columns: var(--columnas);
+  align-items: center;
+  column-gap: 12px;
+  padding: 0 14px 0 18px;
+}
+
+.encabezado {
+  padding: 0 21px 0 19px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 34px;
+  background: var(--dc-fondo-barras);
+  border-bottom: 1px solid var(--dc-divisor);
+
+  button,
+  > span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  > span:not(.derecha) {
+    cursor: default;
+  }
+
+  button:hover {
+    color: var(--dc-texto-destacado);
+  }
+
+  .pi {
+    font-size: 11px;
+  }
+}
+
+.derecha {
+  justify-content: space-between;
+}
+
+.vistas {
+  display: flex;
+  gap: 2px;
+  margin-right: -8px;
+}
+
+.vista {
+  width: 26px;
+  height: 24px !important;
+  justify-content: center;
+  border-radius: 4px;
+
+  .pi {
+    font-size: 12px !important;
+  }
+
+  &.activa {
+    background: var(--dc-boton-activo) !important;
+    color: var(--dc-texto-destacado) !important;
+  }
+}
+
+.grupo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  margin-top: 6px;
+  padding: 0 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+
+  .pi {
+    font-size: 10px;
+  }
+
+  &:hover {
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.fila {
+  height: 34px;
+  margin: 0 6px;
+  padding-left: 12px;
+  border-radius: 5px;
+  cursor: default;
+  user-select: none;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: var(--dc-hover);
+  }
+
+  &.seleccionada {
+    background: var(--dc-seleccion);
+    color: var(--dc-texto-destacado);
+  }
+
+  &.seleccionada.foco {
+    border-color: #2b4670;
+  }
+
+  &.cortada {
+    opacity: 0.45;
+  }
+
+  &.destino {
+    background: var(--dc-boton-activo);
+    border-color: var(--dc-texto);
+  }
+}
+
+.nombre {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.texto {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--dc-texto-destacado);
+}
+
+.secundario {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--dc-texto-secundario);
+  font-size: 13px;
+}
+
+.dc-mono.secundario {
+  font-size: 12px;
+}

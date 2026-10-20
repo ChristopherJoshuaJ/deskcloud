@@ -1,0 +1,323 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.dc-pagina {
+  max-width: 980px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.identidad {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  p {
+    margin: 2px 0 0;
+    font-size: 13px;
+  }
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.icono {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(106, 78, 160, 0.2);
+  color: #b39ae0;
+  font-size: 22px;
+}
+
+.editar {
+  border: none;
+  background: none;
+  color: var(--dc-texto-secundario);
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 6px;
+
+  &:hover {
+    background: var(--dc-hover);
+    color: var(--dc-texto-destacado);
+  }
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.contador {
+  margin-left: 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--dc-marca);
+  color: #fff;
+  font-size: 11px;
+  display: inline-grid;
+  place-items: center;
+}
+
+.ayuda {
+  margin: 4px 0 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.historial {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--dc-texto);
+  font-size: 13.5px;
+  cursor: pointer;
+
+  .pi {
+    font-size: 11px;
+  }
+}
+
+.propuesta {
+  background: var(--dc-fondo-barras);
+  border: 1px solid var(--dc-divisor);
+  border-left: 3px solid var(--dc-marca);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  &.cerrada {
+    border-left-color: var(--dc-borde);
+    opacity: 0.85;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+}
+
+.tipo {
+  font-weight: 600;
+  color: var(--dc-texto-destacado);
+}
+
+.espacio {
+  flex: 1;
+}
+
+.cuando {
+  font-size: 12.5px;
+}
+
+.elementos {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+  }
+
+  .pi {
+    color: var(--dc-carpeta);
+  }
+}
+
+.quien {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--dc-texto-secundario);
+
+  strong {
+    color: var(--dc-texto);
+  }
+}
+
+.motivo {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  color: var(--dc-texto);
+}
+
+.recuento {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.barra {
+  flex: 1;
+  max-width: 260px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--dc-fondo-campos);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--dc-exito);
+  }
+}
+
+.votos {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    background: var(--dc-fondo-campos);
+    color: var(--dc-texto-secundario);
+
+    .pi {
+      font-size: 11px;
+    }
+
+    &.si {
+      color: var(--dc-exito);
+      background: rgba(76, 175, 122, 0.12);
+    }
+
+    &.no {
+      color: var(--dc-peligro);
+      background: rgba(224, 87, 87, 0.12);
+    }
+  }
+}
+
+.mi-voto {
+  font-size: 12px;
+}
+
+.invitar {
+  display: flex;
+  gap: 8px;
+  margin: 4px 0 16px;
+
+  input {
+    flex: 1;
+    max-width: 380px;
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--dc-boton-activo);
+  color: var(--dc-texto-destacado);
+  font-weight: 600;
+
+  &.pendiente {
+    background: var(--dc-fondo-campos);
+    color: var(--dc-texto-secundario);
+  }
+
+  &.chico {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  &.sistema {
+    background: var(--dc-fondo-campos);
+    color: var(--dc-texto-secundario);
+  }
+}
+
+.persona {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nombre {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dc-texto-destacado);
+}
+
+.correo {
+  font-size: 12.5px;
+}
+
+.actividad {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--dc-divisor);
+  }
+
+  strong {
+    color: var(--dc-texto-destacado);
+    font-weight: 600;
+  }
+}
+
+.linea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13.5px;
+}

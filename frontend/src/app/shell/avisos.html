@@ -1,0 +1,52 @@
+<p-button
+  icon="pi pi-bell"
+  [text]="true"
+  [rounded]="true"
+  severity="secondary"
+  [badge]="noLeidos() > 0 ? (noLeidos() > 99 ? '99+' : '' + noLeidos()) : undefined"
+  badgeSeverity="contrast"
+  ariaLabel="Avisos"
+  (onClick)="abrir($event)"
+/>
+
+<p-popover #panel (onShow)="alMostrar()" (onHide)="alOcultar()" appendTo="body">
+  <div class="panel">
+    <header>
+      <span class="dc-etiqueta">Avisos</span>
+      @if (espacios.resumen().votosPendientes > 0) {
+        <span class="pendientes">{{ espacios.resumen().votosPendientes }} por votar</span>
+      }
+    </header>
+
+    <div class="lista">
+      @if (avisos() === null) {
+        <div class="dc-vacio"><i class="pi pi-spin pi-spinner"></i></div>
+      } @else {
+        @for (aviso of avisos(); track aviso.id) {
+          @let t = texto(aviso);
+          <div class="aviso" [class.nuevo]="!aviso.leido" (click)="ir(aviso)" (keydown.enter)="ir(aviso)" tabindex="0" role="button">
+            <i [class]="t.icono" class="icono"></i>
+            <div class="cuerpo">
+              <span class="titulo">{{ t.titulo }}</span>
+              @if (t.detalle) {
+                <span class="detalle">{{ t.detalle }}</span>
+              }
+              @if (aviso.tipo === 'INVITACION' && invitacionesPendientes().has(aviso.datos['invitacionId'])) {
+                <div class="botones">
+                  <p-button label="Aceptar" size="small" (onClick)="responder(aviso, true, $event)" />
+                  <p-button label="Rechazar" size="small" severity="secondary" [outlined]="true" (onClick)="responder(aviso, false, $event)" />
+                </div>
+              }
+              <span class="cuando">{{ aviso.creadoEn | relativa }}</span>
+            </div>
+          </div>
+        } @empty {
+          <div class="dc-vacio">
+            <i class="pi pi-bell-slash"></i>
+            <span>No tienes avisos</span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</p-popover>

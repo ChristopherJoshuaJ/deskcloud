@@ -1,0 +1,86 @@
+@let error = estado.error();
+<div class="explorador">
+  <dc-barra-direccion />
+  <dc-barra-comandos (subirArchivos)="elegirArchivos()" (subirCarpeta)="elegirCarpeta()" />
+
+  <div class="cuerpo">
+    <section
+      class="area"
+      [class.soltando]="soltando()"
+      (click)="alClicFondo($event)"
+      (contextmenu)="menuFondo($event)"
+      (dragover)="alArrastrarSobreArea($event)"
+      (dragleave)="alSalirDelArea($event)"
+      (drop)="alSoltarEnArea($event)"
+    >
+      @if (error) {
+        <div class="dc-vacio">
+          <i class="pi" [class.pi-lock]="error.estado === 404 || error.estado === 403" [class.pi-exclamation-circle]="error.estado !== 404 && error.estado !== 403"></i>
+          <span>{{ error.estado === 404 ? 'Esta carpeta no existe o ya no tienes acceso a ella.' : error.mensaje }}</span>
+          <p-button label="Ir a Mi espacio" icon="pi pi-home" size="small" (onClick)="navegacionMiEspacio()" />
+        </div>
+      } @else if (!estado.contenido()) {
+        <div class="esqueleto">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <p-skeleton height="26px" [width]="90 - i * 7 + '%'" />
+          }
+        </div>
+      } @else if (vacio()) {
+        <div class="dc-vacio">
+          @if (estado.buscando()) {
+            <i class="pi pi-search"></i>
+            <span>No se encontró nada con "{{ estado.consulta() }}" en esta carpeta ni en sus subcarpetas.</span>
+          } @else {
+            <i class="pi pi-folder-open"></i>
+            <span>Esta carpeta está vacía.<br />Arrastra archivos aquí o usa los botones.</span>
+            <div class="botones">
+              <p-button label="Subir archivos" icon="pi pi-upload" size="small" (onClick)="elegirArchivos()" />
+              <p-button label="Nueva carpeta" icon="pi pi-folder-plus" size="small" [outlined]="true" (onClick)="estado.nuevaCarpeta()" />
+            </div>
+          }
+        </div>
+      } @else if (estado.vista() === 'lista') {
+        <dc-lista />
+      } @else {
+        <dc-cuadricula />
+      }
+
+      @if (soltando()) {
+        <div class="capa-soltar">
+          <i class="pi pi-cloud-upload"></i>
+          <span>Suelta para subir a <strong>{{ nombreCarpeta() }}</strong></span>
+        </div>
+      }
+    </section>
+
+    @if (estado.detallesVisible()) {
+      <dc-panel-detalles class="detalles" />
+    }
+  </div>
+
+  <footer class="estado">
+    <span>{{ estado.todos().length }} {{ estado.todos().length === 1 ? 'elemento' : 'elementos' }}</span>
+    @if (estado.seleccionados().length > 0) {
+      <span class="separador"></span>
+      <span>
+        {{ estado.seleccionados().length }} {{ estado.seleccionados().length === 1 ? 'seleccionado' : 'seleccionados' }}
+        @if (estado.tamanoSeleccion() > 0) {
+          <span class="dc-mono">· {{ estado.tamanoSeleccion() | tamano }}</span>
+        }
+      </span>
+    }
+    @if (estado.portapapeles.contenido(); as p) {
+      <span class="separador"></span>
+      <span class="portapapeles">
+        <i class="pi" [class.pi-clipboard]="p.modo === 'cortar'" [class.pi-copy]="p.modo === 'copiar'"></i>
+        {{ p.elementos.length }} {{ p.modo === 'cortar' ? 'para mover' : 'para copiar' }}
+      </span>
+    }
+    <span class="espacio"></span>
+    <span class="dc-etiqueta">Vista: {{ estado.vista() === 'lista' ? 'Lista' : 'Cuadrícula' }}</span>
+  </footer>
+</div>
+
+<p-contextmenu #menu [model]="opcionesMenu()" appendTo="body" (onShow)="menuAbierto = true" (onHide)="menuAbierto = false" />
+<input #entradaArchivos type="file" multiple hidden (change)="alElegir(entradaArchivos)" />
+<input #entradaCarpeta type="file" webkitdirectory multiple hidden (change)="alElegir(entradaCarpeta)" />

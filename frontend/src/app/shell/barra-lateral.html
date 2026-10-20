@@ -1,0 +1,61 @@
+<nav class="barra" aria-label="Carpetas">
+  <section>
+    <h3 class="dc-etiqueta titulo">Accesos rápidos</h3>
+    <div cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="soltarAcceso($event)" role="tree">
+      @for (favorito of espacios.favoritos(); track favorito.id) {
+        <dc-nodo-arbol cdkDrag cdkDragLockAxis="y" [cdkDragStartDelay]="120" [nodo]="favorito" [sincronizar]="false" />
+      } @empty {
+        <p class="vacio">Fija carpetas desde el menú contextual para tenerlas a mano.</p>
+      }
+    </div>
+  </section>
+
+  <section role="tree">
+    @if (miEspacio(); as raiz) {
+      <dc-nodo-arbol [nodo]="raiz" icono="pi pi-home" [abrirAlInicio]="true" />
+    }
+    <a
+      class="enlace"
+      routerLink="/papelera"
+      routerLinkActive="activo"
+      [class.encima]="papeleraEncima()"
+      (dragover)="papeleraDragOver($event)"
+      (dragleave)="papeleraEncima.set(false)"
+      (drop)="papeleraDrop($event)"
+    >
+      <i class="pi pi-trash"></i>
+      <span>Papelera</span>
+    </a>
+  </section>
+
+  <section>
+    <div class="titulo con-boton">
+      <h3 class="dc-etiqueta">Espacios compartidos</h3>
+      <p-button icon="pi pi-plus" [text]="true" [rounded]="true" size="small" severity="secondary" pTooltip="Nuevo espacio" tooltipPosition="right" ariaLabel="Nuevo espacio" (onClick)="nuevoEspacio()" />
+    </div>
+
+    @for (invitacion of espacios.invitaciones(); track invitacion.id) {
+      <div class="invitacion">
+        <i class="pi pi-envelope"></i>
+        <div class="texto">
+          <span class="nombre" [title]="invitacion.espacio.nombre">{{ invitacion.espacio.nombre }}</span>
+          <span class="de">Invitación de {{ invitacion.invitadoPor?.nombre ?? 'alguien' }}</span>
+        </div>
+        <p-button icon="pi pi-check" [text]="true" [rounded]="true" size="small" severity="success" pTooltip="Aceptar" ariaLabel="Aceptar" [disabled]="respondiendo() === invitacion.id" (onClick)="responder(invitacion, true)" />
+        <p-button icon="pi pi-times" [text]="true" [rounded]="true" size="small" severity="danger" pTooltip="Rechazar" ariaLabel="Rechazar" [disabled]="respondiendo() === invitacion.id" (onClick)="responder(invitacion, false)" />
+      </div>
+    }
+
+    <div role="tree">
+      @for (item of compartidos(); track item.espacio.id) {
+        <dc-nodo-arbol [nodo]="item.nodo" icono="pi pi-users" [insignia]="item.espacio.votosPendientes" />
+      } @empty {
+        @if (espacios.invitaciones().length === 0) {
+          <p class="vacio">Crea un espacio para compartir archivos con otras personas.</p>
+        }
+      }
+    </div>
+  </section>
+</nav>
+
+<p-contextmenu #menu [model]="opcionesMenu()" appendTo="body" />

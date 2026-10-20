@@ -1,0 +1,226 @@
+@if (error()) {
+  <div class="dc-pagina">
+    <div class="dc-vacio">
+      <i class="pi pi-lock"></i>
+      <span>{{ error() }}</span>
+      <a [routerLink]="['/carpeta', sesion.usuario()?.raizId]">Volver a Mi espacio</a>
+    </div>
+  </div>
+} @else if (espacio(); as e) {
+  <div class="dc-pagina">
+    <header class="cabecera">
+      <div class="identidad">
+        <span class="icono"><i class="pi pi-users"></i></span>
+        <div>
+          <h1>
+            {{ e.nombre }}
+            <button type="button" class="editar" (click)="renombrar()" pTooltip="Cambiar nombre" aria-label="Cambiar nombre"><i class="pi pi-pencil"></i></button>
+          </h1>
+          <p class="dc-secundario">
+            {{ e.totalMiembros }} {{ e.totalMiembros === 1 ? 'miembro' : 'miembros' }} ·
+            {{ e.esAdministrador ? 'Lo administras tú' : 'Administrado por ' + (e.administrador?.nombre ?? 'nadie') }} ·
+            creado {{ e.creadoEn | relativa }}
+          </p>
+        </div>
+      </div>
+      <div class="acciones">
+        <p-button label="Abrir archivos" icon="pi pi-folder-open" size="small" (onClick)="abrirArchivos()" />
+        <p-button label="Papelera" icon="pi pi-trash" size="small" [outlined]="true" [routerLink]="['/espacios', e.id, 'papelera']" />
+        <p-button label="Salir" icon="pi pi-sign-out" size="small" severity="danger" [text]="true" (onClick)="salir()" />
+      </div>
+    </header>
+
+    <p-tabs [(value)]="pestana">
+      <p-tablist>
+        <p-tab value="votaciones">
+          Votaciones
+          @if ((abiertas()?.length ?? 0) > 0) {
+            <span class="contador">{{ abiertas()!.length }}</span>
+          }
+        </p-tab>
+        <p-tab value="miembros">Miembros</p-tab>
+        <p-tab value="actividad">Actividad</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="votaciones">
+          <p class="ayuda dc-secundario">
+            Enviar a la papelera, restaurar desde la papelera y eliminar definitivamente necesitan el voto a favor de todos los miembros. Si en 7 días no hay unanimidad, la propuesta vence y no se hace nada.
+          </p>
+          @for (p of abiertas(); track p.id) {
+            <ng-container *ngTemplateOutlet="tarjeta; context: { $implicit: p }" />
+          } @empty {
+            @if (abiertas() !== null) {
+              <div class="dc-vacio"><i class="pi pi-check-square"></i><span>No hay votaciones abiertas.</span></div>
+            }
+          }
+
+          <button type="button" class="historial" (click)="alternarCerradas()">
+            <i class="pi" [class.pi-chevron-right]="!verCerradas()" [class.pi-chevron-down]="verCerradas()"></i>
+            Historial de votaciones
+          </button>
+          @if (verCerradas()) {
+            @for (p of cerradas(); track p.id) {
+              <ng-container *ngTemplateOutlet="tarjeta; context: { $implicit: p }" />
+            } @empty {
+              <p class="dc-secundario">{{ cerradas() === null ? 'Cargando…' : 'Todavía no hay votaciones cerradas.' }}</p>
+            }
+          }
+        </p-tabpanel>
+
+        <p-tabpanel value="miembros">
+          @if (soyAdministrador()) {
+            <form class="invitar" (ngSubmit)="invitar()">
+              <input pInputText type="email" name="correo" placeholder="Correo de la persona a invitar" autocomplete="off" [(ngModel)]="correo" />
+              <p-button type="submit" label="Invitar" icon="pi pi-user-plus" [loading]="invitando()" [disabled]="!correo().trim()" />
+            </form>
+          }
+          <ul class="dc-lista-simple">
+            @for (m of datos()!.miembros; track m.id) {
+              <li>
+                <span class="avatar">{{ m.nombre.charAt(0).toUpperCase() }}</span>
+                <div class="persona">
+                  <span class="nombre">
+                    {{ m.nombre }}
+                    @if (m.id === sesion.usuario()?.id) {
+                      <span class="dc-secundario">(tú)</span>
+                    }
+                    @if (m.esAdministrador) {
+                      <p-tag value="Administra" severity="contrast" />
+                    }
+                  </span>
+                  <span class="dc-secundario correo">{{ m.correo }} · se unió {{ m.unidoEn | relativa }}</span>
+                </div>
+                @if (soyAdministrador() && m.id !== sesion.usuario()?.id) {
+                  <p-button icon="pi pi-user-minus" [text]="true" [rounded]="true" severity="danger" pTooltip="Sacar del espacio" ariaLabel="Sacar del espacio" (onClick)="expulsar(m.id, m.nombre)" />
+                }
+              </li>
+            }
+          </ul>
+
+          @if (datos()!.invitaciones.length > 0) {
+            <h2>Invitaciones pendientes</h2>
+            <ul class="dc-lista-simple">
+              @for (i of datos()!.invitaciones; track i.id) {
+                <li>
+                  <span class="avatar pendiente"><i class="pi pi-envelope"></i></span>
+                  <div class="persona">
+                    <span class="nombre">{{ i.invitado.nombre }}</span>
+                    <span class="dc-secundario correo">{{ i.invitado.correo }} · invitado {{ i.creadoEn | relativa }}</span>
+                  </div>
+                  @if (soyAdministrador()) {
+                    <p-button label="Cancelar" size="small" [text]="true" severity="secondary" (onClick)="cancelarInvitacion(i.id)" />
+                  }
+                </li>
+              }
+            </ul>
+          }
+          @if (!soyAdministrador()) {
+            <p class="ayuda dc-secundario">Solo quien administra el espacio puede invitar o sacar miembros.</p>
+          }
+        </p-tabpanel>
+
+        <p-tabpanel value="actividad">
+          <ul class="actividad">
+            @for (a of actividad(); track a.id) {
+              @let linea = lineaActividad(a);
+              <li>
+                @if (linea.quien) {
+                  <span class="avatar chico">{{ linea.quien.charAt(0).toUpperCase() }}</span>
+                } @else {
+                  <span class="avatar chico sistema"><i class="pi pi-info"></i></span>
+                }
+                <div class="linea">
+                  <span>
+                    @if (linea.quien) {
+                      <strong>{{ linea.quien }}</strong>
+                    }
+                    {{ linea.texto }}
+                  </span>
+                  <span class="dc-secundario cuando" [title]="a.creadoEn | fecha: true">{{ a.creadoEn | relativa }}</span>
+                </div>
+                @if (a.nodoId) {
+                  <p-button icon="pi pi-external-link" [text]="true" [rounded]="true" size="small" severity="secondary" pTooltip="Ir al elemento" ariaLabel="Ir al elemento" (onClick)="abrirElemento(a.nodoId)" />
+                }
+              </li>
+            } @empty {
+              @if (!cargandoActividad()) {
+                <div class="dc-vacio"><i class="pi pi-history"></i><span>Todavía no hay actividad.</span></div>
+              }
+            }
+          </ul>
+          @if (hayMasActividad() && actividad().length > 0) {
+            <p-button label="Ver más" [text]="true" size="small" [loading]="cargandoActividad()" (onClick)="cargarActividad()" />
+          }
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+} @else {
+  <div class="dc-pagina"><div class="dc-vacio"><i class="pi pi-spin pi-spinner"></i></div></div>
+}
+
+<ng-template #tarjeta let-p>
+  <article class="propuesta" [class.cerrada]="p.estado !== 'ABIERTA'">
+    <header>
+      <span class="tipo">{{ p.elementos.length === 0 && p.tipo === 'ELIMINAR_DEFINITIVO' ? 'Vaciar la papelera' : nombrePropuesta[p.tipo] }}</span>
+      <p-tag [value]="estados[p.estado].texto" [severity]="estados[p.estado].severidad" />
+      <span class="espacio"></span>
+      <span class="dc-secundario cuando">
+        @if (p.estado === 'ABIERTA') {
+          vence {{ p.expiraEn | relativa }}
+        } @else {
+          {{ p.cerradaEn | fecha }}
+        }
+      </span>
+    </header>
+
+    <ul class="elementos">
+      @for (el of p.elementos; track $index) {
+        <li>
+          <i class="pi" [class.pi-folder]="el.tipo === 'CARPETA'" [class.pi-file]="el.tipo === 'ARCHIVO'"></i>
+          @if (el.id && p.estado === 'ABIERTA' && p.tipo === 'ELIMINAR') {
+            <a href="" (click)="$event.preventDefault(); abrirElemento(el.id)">{{ el.nombre }}</a>
+          } @else {
+            {{ el.nombre }}
+          }
+        </li>
+      }
+    </ul>
+
+    <p class="quien">
+      Propuesta por <strong>{{ p.propuestoPor?.nombre ?? 'alguien' }}</strong> {{ p.creadaEn | relativa }}
+      @if (p.motivo) {
+        <span class="motivo">"{{ p.motivo }}"</span>
+      }
+    </p>
+
+    <div class="recuento">
+      <div class="barra"><span [style.width.%]="porcentaje(p)"></span></div>
+      <span class="dc-mono">{{ p.recuento.si }}/{{ p.recuento.total }} a favor</span>
+    </div>
+    <ul class="votos">
+      @for (v of p.votos; track v.usuario.id) {
+        <li [class.si]="v.voto === 'SI'" [class.no]="v.voto === 'NO'" [pTooltip]="v.voto === 'SI' ? 'A favor' : v.voto === 'NO' ? 'En contra' : 'Todavía no votó'">
+          <i class="pi" [class.pi-check]="v.voto === 'SI'" [class.pi-times]="v.voto === 'NO'" [class.pi-clock]="!v.voto"></i>
+          {{ v.usuario.nombre }}
+        </li>
+      }
+    </ul>
+
+    @if (p.estado === 'ABIERTA') {
+      <footer>
+        @if (p.puedoVotar) {
+          <p-button label="A favor" icon="pi pi-check" size="small" [outlined]="p.miVoto !== 'SI'" severity="success" [loading]="votando() === p.id" (onClick)="votar(p, 'si')" />
+          <p-button label="En contra" icon="pi pi-times" size="small" [outlined]="p.miVoto !== 'NO'" severity="danger" [disabled]="votando() === p.id" (onClick)="votar(p, 'no')" />
+          @if (p.miVoto) {
+            <span class="dc-secundario mi-voto">Puedes cambiar tu voto mientras siga abierta.</span>
+          }
+        }
+        <span class="espacio"></span>
+        @if (p.propuestoPor?.id === sesion.usuario()?.id) {
+          <p-button label="Retirar" icon="pi pi-undo" size="small" [text]="true" severity="secondary" (onClick)="retirar(p)" />
+        }
+      </footer>
+    }
+  </article>
+</ng-template>
